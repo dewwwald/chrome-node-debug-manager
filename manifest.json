@@ -15,6 +15,6 @@
 		"file:///Users/dewald/node-debugger-url.json"
 	],
 	"browser_action": {
-		"default_popup": "test.html"
+		"default_popup": "default-popup.html"
 	}
 }
