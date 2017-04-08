@@ -38,3 +38,4 @@ You can create issues for these to become prioratized. (For example the next tas
   - figuring out a way to check file change or get only date edited of file
 - Make file read location editable
 - Make the timeout time editable of how regular the link is checked
+- Cut down the Christmas tree

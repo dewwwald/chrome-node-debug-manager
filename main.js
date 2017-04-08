@@ -3,21 +3,25 @@ let waitForLazyLoader = [
 	'app',
 	'runtime',
 	'windows',
+	'tabs'
 ];
-let ajax = new XMLHttpRequest();
 let response = undefined;
+let debuggerWindow = undefined;
+let debuggerTab = undefined;
 
 // short handlers
 let defined = x => typeof x !== 'undefined' && x !== null;
 
 // Functions
 let loadFile = function (resolve) {
+	let ajax = new XMLHttpRequest();
 	ajax.onreadystatechange = function() {
-		if (ajax.readyState == 4 && ajax.responseText !== "") {
+		if (ajax.readyState === 4 && ajax.responseText !== "") {
 			response = JSON.parse(ajax.responseText);
 			resolve();
 		}
 	};
+	ajax.withCredentials = true;
 	ajax.open('GET', 'file:///Users/dewald/node-debugger-url.json', true);
 	ajax.setRequestHeader("Content-type", "application/json");
 	ajax.send();
@@ -34,29 +38,54 @@ let checkLazyLoadAvailability = function (object) {
 	return false;
 }
 
-let lazyLoadQueue = function (object, cb) {
+let lazyLoadQueue = function (object, resolve) {
+	console.log(response);
 	checkLazyLoadAvailability(object);
 	if (waitForLazyLoader.length > 0) {
 		t = setTimeout(() => {
 			clearTimeout(t); // cleanup
-			lazyLoadQueue(object, cb);
+			lazyLoadQueue(object, resolve);
 		}, 1000);
 	} else {
-		cb();
+		resolve();
 	}
 }
 
-let boot = function () {
-	let test = chrome.windows.create({
-		url: response.url,
+let boot = function (resolve) {
+	chrome.windows.create({
+		url: response.url
+	}, function () {
+		chrome.windows.getLastFocused({ populate:true }, (a) => {
+			debuggerWindow = a;
+			resolve();
+		});
 	});
 }
 
+let linkChaged = function () {
+	chrome.tabs.update(debuggerTab.id, { url: response.url});
+}
+	
+let startWatchingLinkChages = function () {
+	setInterval(() => {
+		let copyResponse = response;
+		new Promise(loadFile)
+			.then(() => {
+				if (response.url !== copyResponse.url) {
+					linkChaged();
+				}
+			});
+	}, 1000);
+}
+
 // Start
+// Chrismas tree, I know
 new Promise(loadFile)
-	.then(() => {
-		lazyLoadQueue(chrome, () => {
-			boot();
-		})
-	});
+	.then(() => new Promise(lazyLoadQueue.bind(null, chrome))
+	.then(() => new Promise(boot)
+	.then(() => new Promise(function (resolve) {
+		debuggerTab = debuggerWindow.tabs[0];
+		resolve();
+	})
+	.then(startWatchingLinkChages))));
 
