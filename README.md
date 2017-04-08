@@ -27,3 +27,14 @@ gulp.task('nodemon', function () {
   return serverWatch;
 });
 ```
+
+#TODO
+
+You can create issues for these to become prioratized. (For example the next task in the list below has a #1)
+
+- Add a start debugging button to the popup (#1)
+- only reload file when it changes, this could potentially be solved by
+  - getting a message from NodeJs
+  - figuring out a way to check file change or get only date edited of file
+- Make file read location editable
+- Make the timeout time editable of how regular the link is checked
