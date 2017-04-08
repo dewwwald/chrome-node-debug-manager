@@ -22,7 +22,7 @@ let loadFile = function (resolve) {
 		}
 	};
 	ajax.withCredentials = true;
-	ajax.open('GET', 'file:///Users/dewald/node-debugger-url.json', true);
+	ajax.open('GET', 'file://' + JSON.parse(localStorage.getItem('prefs')).path, true);
 	ajax.setRequestHeader("Content-type", "application/json");
 	ajax.send();
 }
@@ -39,7 +39,6 @@ let checkLazyLoadAvailability = function (object) {
 }
 
 let lazyLoadQueue = function (object, resolve) {
-	console.log(response);
 	checkLazyLoadAvailability(object);
 	if (waitForLazyLoader.length > 0) {
 		t = setTimeout(() => {
@@ -80,12 +79,21 @@ let startWatchingLinkChages = function () {
 
 // Start
 // Chrismas tree, I know
-new Promise(loadFile)
-	.then(() => new Promise(lazyLoadQueue.bind(null, chrome))
-	.then(() => new Promise(boot)
-	.then(() => new Promise(function (resolve) {
-		debuggerTab = debuggerWindow.tabs[0];
-		resolve();
-	})
-	.then(startWatchingLinkChages))));
+chrome.extension.onMessage.addListener(function (request, sender, sendResponse) {
+	if (request.action === 'start') {
+		new Promise(loadFile)
+			.then(() => new Promise(lazyLoadQueue.bind(null, chrome))
+			.then(() => new Promise(boot)
+			.then(() => new Promise(function (resolve) {
+				debuggerTab = debuggerWindow.tabs[0];
+				resolve();
+			})
+			.then(startWatchingLinkChages))));
+	}
+});
 
+chrome.extension.onMessage.addListener(function (request, sender, sendResponse) {
+	if (request.action === 'prefs') {
+		sendResponse(JSON.parse(localStorage.getItem('prefs')));
+	}
+});
