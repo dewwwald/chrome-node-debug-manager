@@ -8,6 +8,7 @@ document.onreadystatechange = function () {
 		}, false);
 
 		startButton.addEventListener('click', function () {
+			localStorage.setItem('prefs', JSON.stringify({ path: pathInputField.value }));
 			chrome.extension.sendMessage('kjppjhifcapacgldhmagolflapbdgnko', {
 			  action: 'start'
 			});
