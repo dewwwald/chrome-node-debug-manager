@@ -17,7 +17,9 @@ document.onreadystatechange = function () {
 		chrome.extension.sendMessage('kjppjhifcapacgldhmagolflapbdgnko', {
 		  action: 'prefs'
 		}, function (response) {
-			pathInputField.value = response.path
+			if (typeof response !== 'undefined') {
+				pathInputField.value = response.path
+			}
 		});
 	}
 }
