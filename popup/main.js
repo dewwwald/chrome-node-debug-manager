@@ -9,12 +9,12 @@ document.onreadystatechange = function () {
 
 		startButton.addEventListener('click', function () {
 			localStorage.setItem('prefs', JSON.stringify({ path: pathInputField.value }));
-			chrome.extension.sendMessage('kjppjhifcapacgldhmagolflapbdgnko', {
+			chrome.extension.sendMessage('dgjckdjcikoggkfmkfnpfkmnimhacpdi', {
 			  action: 'start'
 			});
 		}, false);
 
-		chrome.extension.sendMessage('kjppjhifcapacgldhmagolflapbdgnko', {
+		chrome.extension.sendMessage('dgjckdjcikoggkfmkfnpfkmnimhacpdi', {
 		  action: 'prefs'
 		}, function (response) {
 			if (typeof response !== 'undefined') {
