@@ -3,7 +3,7 @@ document.onreadystatechange = function () {
 		let startButton = document.getElementById('start-debugger');
 		let pathInputField = document.getElementById('path-input-field');
 
-		pathInputField.addEventListener('change', function () {
+		pathInputField.addEventListener('keyup', function () {
 			localStorage.setItem('prefs', JSON.stringify({ path: this.value }));
 		}, false);
 
