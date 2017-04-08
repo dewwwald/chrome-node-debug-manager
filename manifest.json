@@ -1,0 +1,11 @@
+{
+	"manifest_version": 2,
+	"name": "NodeJs Debug Manager",
+	"version": "0.0.0",
+	"icons": {
+		"128": "128.png"
+	},
+	"browser_action": {
+		"default_popup": "test.html"
+	}
+}
