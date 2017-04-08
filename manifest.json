@@ -12,6 +12,8 @@
 	},
 	"permissions": [
 		"background",
+		"tabs",
+		"windows",
 		"file:///Users/dewald/node-debugger-url.json"
 	],
 	"browser_action": {
